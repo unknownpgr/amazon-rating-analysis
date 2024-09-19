@@ -30,7 +30,8 @@ class SVDRatingPredictor(RatingPredictor):
         user, item, rating = dataset.to_numpy()
 
         epochs = 10
-        gamma = 0.01
+        gamma = 0.01 # 학습률
+        lambda_ = 0.02  # 정규화 항
 
         for epoch in range(epochs):
             for u, i, r in zip(user, item, rating):
@@ -38,13 +39,11 @@ class SVDRatingPredictor(RatingPredictor):
                 error = r - prediction
                 # 한 epoch 내에서 U[i]와 V[i]는 어차피 여러 번 업데이트된다.
                 # 그러므로 여기서 U, V의 업데이트 순서를 바꿔 봐야 큰 도움이 되지 않는다.
-                U[u] += gamma * error * V[i]
-                V[i] += gamma * error * U[u]
+                U[u] += gamma * (error * V[i] - lambda_ * U[u])
+                V[i] += gamma * (error * U[u] - lambda_ * V[i])
 
     def predict(self, user_id, item_id):
-        user_index = dataset.map_user_id(user_id)
-        item_index = dataset.map_item_id(item_id)
-        return np.dot(U[user_index], V[item_index])
+        pass
 
     def evaluate(self, dataset):
         user, item, rating = dataset.to_numpy()
