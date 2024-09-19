@@ -52,3 +52,11 @@ class SVDRatingPredictor(RatingPredictor):
             prediction = np.dot(self.U[u], self.V[i])
             mse += (r - prediction) ** 2
         return mse / len(rating)
+
+    def export(self, path):
+        np.savez(path, U=self.U, V=self.V)
+
+    def load(self, path):
+        data = np.load(path)
+        self.U = data["U"]
+        self.V = data["V"]
