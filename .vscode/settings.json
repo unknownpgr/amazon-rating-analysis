@@ -7,5 +7,9 @@
   "black-formatter.args": ["--line-length", "150"],
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "notebook.diff.ignoreOutputs": true,
+  "notebook.diff.ignoreMetadata": true,
+  "notebook.backup.sizeLimit": 1000,
+  "jupyter.themeMatplotlibPlots": true
 }
