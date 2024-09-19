@@ -25,7 +25,7 @@ class AmazonReviewsDatasetLoader(DatasetLoader):
         ratings = []
 
         i = 0
-        for row in dataset:
+        for row in dataset.shuffle():
             user_ids.append(row["user_id"])
             item_ids.append(row["parent_asin"])
             ratings.append(float(row["rating"]))
@@ -33,7 +33,7 @@ class AmazonReviewsDatasetLoader(DatasetLoader):
             if i % 100000 == 0:
                 percent = i / len(dataset) * 100
                 print(f"Loaded {i} ratings ({percent:.2f}%)")
-            if i >= 10000:
+            if i >= 1000000:
                 break
 
         return RatingDataset(user_ids, item_ids, ratings)

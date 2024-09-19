@@ -83,6 +83,37 @@ class RatingDataset:
     def num_items(self) -> int:
         return len(self.__item_id_map)
 
+    def __len__(self) -> int:
+        return len(self.__ratings)
+
+    def split(self, ratios: List[float]) -> List["RatingDataset"]:
+        assert isinstance(ratios, list)
+        assert all(isinstance(ratio, float) for ratio in ratios)
+        
+        data_counts = []
+        for ratio in ratios:
+            data_counts.append(int(len(self) * ratio))
+
+        while sum(data_counts) < len(self):
+            data_counts[0] += 1
+
+        datasets = []
+        start_index = 0
+        for data_count in data_counts:
+            end_index = start_index + data_count
+            sub_user_indices = self.__user_indices[start_index:end_index]
+            sub_item_indices = self.__item_indices[start_index:end_index]
+            sub_ratings = self.__ratings[start_index:end_index]
+            sub_dataset = RatingDataset([], [], [])
+            sub_dataset.__user_indices = sub_user_indices
+            sub_dataset.__item_indices = sub_item_indices
+            sub_dataset.__ratings = sub_ratings
+            sub_dataset.__user_id_map = self.__user_id_map
+            sub_dataset.__item_id_map = self.__item_id_map
+            datasets.append(sub_dataset)
+            start_index = end_index
+            
+        return datasets
 
 class DatasetLoader(ABC):
     @abstractmethod
