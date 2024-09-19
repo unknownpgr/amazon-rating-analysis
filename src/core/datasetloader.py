@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Tuple
-from dataclasses import dataclass
+from core.util import task
 import numpy as np
 
 
@@ -30,29 +30,30 @@ class StringIndexMap:
 
 class RatingDataset:
     def __init__(self, user_ids: List[str], item_ids: List[str], ratings: List[float]):
-        # Type check assertions
-        assert isinstance(user_ids, list)
-        assert isinstance(item_ids, list)
-        assert isinstance(ratings, list)
-        assert all(isinstance(user_id, str) for user_id in user_ids)
-        assert all(isinstance(item_id, str) for item_id in item_ids)
-        assert all(isinstance(rating, float) for rating in ratings)
-        assert len(user_ids) == len(item_ids) == len(ratings)
+        with task("Dataset initialization"):
+            # Type check assertions
+            assert isinstance(user_ids, list)
+            assert isinstance(item_ids, list)
+            assert isinstance(ratings, list)
+            assert all(isinstance(user_id, str) for user_id in user_ids)
+            assert all(isinstance(item_id, str) for item_id in item_ids)
+            assert all(isinstance(rating, float) for rating in ratings)
+            assert len(user_ids) == len(item_ids) == len(ratings)
 
-        # Mappings
-        self.__user_id_map = StringIndexMap(user_ids)
-        self.__item_id_map = StringIndexMap(item_ids)
+            # Mappings
+            self.__user_id_map = StringIndexMap(user_ids)
+            self.__item_id_map = StringIndexMap(item_ids)
 
-        # Core data
-        self.__user_indices = np.array(
-            [self.__user_id_map.get_index(user_id) for user_id in user_ids],
-            dtype=np.int32,
-        )
-        self.__item_indices = np.array(
-            [self.__item_id_map.get_index(item_id) for item_id in item_ids],
-            dtype=np.int32,
-        )
-        self.__ratings = np.array(ratings, dtype=np.float32)
+            # Core data
+            self.__user_indices = np.array(
+                [self.__user_id_map.get_index(user_id) for user_id in user_ids],
+                dtype=np.int32,
+            )
+            self.__item_indices = np.array(
+                [self.__item_id_map.get_index(item_id) for item_id in item_ids],
+                dtype=np.int32,
+            )
+            self.__ratings = np.array(ratings, dtype=np.float32)
 
     def get_datum(self, index: int) -> Tuple[int, int, float]:
         user_index = self.__user_indices[index]
@@ -89,7 +90,7 @@ class RatingDataset:
     def split(self, ratios: List[float]) -> List["RatingDataset"]:
         assert isinstance(ratios, list)
         assert all(isinstance(ratio, float) for ratio in ratios)
-        
+
         data_counts = []
         for ratio in ratios:
             data_counts.append(int(len(self) * ratio))
@@ -112,8 +113,9 @@ class RatingDataset:
             sub_dataset.__item_id_map = self.__item_id_map
             datasets.append(sub_dataset)
             start_index = end_index
-            
+
         return datasets
+
 
 class DatasetLoader(ABC):
     @abstractmethod

@@ -1,6 +1,10 @@
 from core.train import RatingPredictor
 import numpy as np
 
+"""
+FunkSVD 알고리즘을 구현한다.
+"""
+
 
 class SVDRatingPredictor(RatingPredictor):
     def __init__(self, latent_dim=2):
@@ -30,7 +34,7 @@ class SVDRatingPredictor(RatingPredictor):
         user, item, rating = dataset.to_numpy()
 
         epochs = 10
-        gamma = 0.01 # 학습률
+        gamma = 0.01  # 학습률
         lambda_ = 0.02  # 정규화 항
 
         for epoch in range(epochs):
