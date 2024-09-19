@@ -15,3 +15,11 @@ class RatingPredictor(ABC):
     @abstractmethod
     def evaluate(self, dataset: RatingDataset) -> float:
         pass
+
+    @abstractmethod
+    def load(self, path: str):
+        pass
+
+    @abstractmethod
+    def save(self, path: str):
+        pass
