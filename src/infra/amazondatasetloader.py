@@ -27,7 +27,7 @@ class AmazonReviewsDatasetLoader(DataLoader):
         for row in dataset:
             user_ids.append(row["user_id"])
             item_ids.append(row["parent_asin"])
-            ratings.append(row["rating"])
+            ratings.append(float(row["rating"]))
             i+=1
             if i%100000==0:
                 percent = i/len(dataset)*100
