@@ -11,25 +11,19 @@ class SVDRatingPredictor(RatingPredictor):
         self.latent_dim = latent_dim
         self.dataset = None
 
-    def train(self, dataset):        
+    def train(self, dataset):
         n_users = dataset.num_users()
         n_items = dataset.num_items()
 
         if self.dataset is None:
             self.dataset = dataset
-            U = np.random.normal(
-                scale=1.0 / self.latent_dim, size=(n_users, self.latent_dim)
-            )
-            self.U = U
-            V = np.random.normal(
-                scale=1.0 / self.latent_dim, size=(n_items, self.latent_dim)
-            )
-            self.V = V
+            self.U = np.random.normal(scale=1.0 / self.latent_dim, size=(n_users, self.latent_dim))
+            self.V = np.random.normal(scale=1.0 / self.latent_dim, size=(n_items, self.latent_dim))
         elif self.dataset != dataset:
             raise ValueError("Dataset changed")
-        else:
-            U = self.U
-            V = self.V
+
+        U = self.U
+        V = self.V
 
         user, item, rating = dataset.to_numpy()
 
@@ -41,8 +35,6 @@ class SVDRatingPredictor(RatingPredictor):
             for u, i, r in zip(user, item, rating):
                 prediction = np.dot(U[u], V[i])
                 error = r - prediction
-                # 한 epoch 내에서 U[i]와 V[i]는 어차피 여러 번 업데이트된다.
-                # 그러므로 여기서 U, V의 업데이트 순서를 바꿔 봐야 큰 도움이 되지 않는다.
                 U[u] += gamma * (error * V[i] - lambda_ * U[u])
                 V[i] += gamma * (error * U[u] - lambda_ * V[i])
 

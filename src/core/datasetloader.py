@@ -12,9 +12,7 @@ class StringIndexMap:
         self.__init(unique_strings)
 
     def __init(self, unique_strings: List[str]):
-        self.__string_to_index = {
-            string: index for index, string in enumerate(unique_strings)
-        }
+        self.__string_to_index = {string: index for index, string in enumerate(unique_strings)}
         self.__index_to_string = unique_strings
         self.__num_strings = len(unique_strings)
 
@@ -45,14 +43,8 @@ class RatingDataset:
             self.__item_id_map = StringIndexMap(item_ids)
 
             # Core data
-            self.__user_indices = np.array(
-                [self.__user_id_map.get_index(user_id) for user_id in user_ids],
-                dtype=np.int32,
-            )
-            self.__item_indices = np.array(
-                [self.__item_id_map.get_index(item_id) for item_id in item_ids],
-                dtype=np.int32,
-            )
+            self.__user_indices = np.array([self.__user_id_map.get_index(user_id) for user_id in user_ids], dtype=np.int32)
+            self.__item_indices = np.array([self.__item_id_map.get_index(item_id) for item_id in item_ids], dtype=np.int32)
             self.__ratings = np.array(ratings, dtype=np.float32)
 
     def get_datum(self, index: int) -> Tuple[int, int, float]:

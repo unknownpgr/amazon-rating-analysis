@@ -31,28 +31,16 @@ class task:
     def __exit__(self, type, value, traceback):
         elapsed_time = millis() - self.start_time
         if type is not None:
-            message = (
-                "\r"
-                + task.depth * "  "
-                + f"|  {FONT['RED']}Task is finished with an error: {value}{FONT['RESET']}"
-            )
+            message = "\r" + task.depth * "  " + f"|  {FONT['RED']}Task is finished with an error: {value}{FONT['RESET']}"
             print(message)
         task.depth -= 1
-        message = (
-            "\r"
-            + task.depth * "  "
-            + f" \u27CB  {self.name} {FONT['BOLD']}[+{elapsed_time}ms]{FONT['RESET']}"
-        )
+        message = "\r" + task.depth * "  " + f" \u27CB  {self.name} {FONT['BOLD']}[+{elapsed_time}ms]{FONT['RESET']}"
         print(message)
         return False
 
     def log(message):
         elapsed_time = millis() - task.previouse_log_time
-        message = (
-            "\r"
-            + task.depth * "  "
-            + f"|  {message} {FONT['BOLD']}[+{elapsed_time}ms]{FONT['RESET']}"
-        )
+        message = "\r" + task.depth * "  " + f"|  {message} {FONT['BOLD']}[+{elapsed_time}ms]{FONT['RESET']}"
         print(message)
         task.previouse_log_time = millis()
 
