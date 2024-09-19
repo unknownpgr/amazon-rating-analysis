@@ -1,4 +1,5 @@
 from core.train import RatingPredictor
+from core.util import task
 import numpy as np
 
 """
@@ -10,6 +11,13 @@ class SVDRatingPredictor(RatingPredictor):
     def __init__(self, latent_dim=2):
         self.latent_dim = latent_dim
         self.dataset = None
+
+        self.gamma = 0.05  # 학습률
+        self.lambda_ = 0.02
+
+        with task("Model initialization"):
+            task.log("latent_dim :", latent_dim)
+            task.log("gamma      :", self.gamma)
 
     def train(self, dataset):
         n_users = dataset.num_users()
@@ -28,8 +36,8 @@ class SVDRatingPredictor(RatingPredictor):
         user, item, rating = dataset.to_numpy()
 
         epochs = 10
-        gamma = 0.01  # 학습률
-        lambda_ = 0.02  # 정규화 항
+        gamma = self.gamma
+        lambda_ = self.lambda_
 
         for _ in range(epochs):
             for u, i, r in zip(user, item, rating):

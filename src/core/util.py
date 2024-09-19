@@ -38,7 +38,8 @@ class task:
         print(message)
         return False
 
-    def log(message):
+    def log(*message):
+        message = " ".join(map(str, message))
         elapsed_time = millis() - task.previouse_log_time
         message = "\r" + task.depth * "  " + f"|  {message} {FONT['BOLD']}[+{elapsed_time}ms]{FONT['RESET']}"
         print(message)
