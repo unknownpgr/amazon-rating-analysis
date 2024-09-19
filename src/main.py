@@ -1,7 +1,10 @@
 from infra.amazondatasetloader import AmazonReviewsDatasetLoader
-dataLoader = AmazonReviewsDatasetLoader()
-data = dataLoader.load_data()
+from infra.svdpredictor import SVDRatingPredictor
+
+dataset = AmazonReviewsDatasetLoader().load_dataset()
+predictor = SVDRatingPredictor(latent_dim=2)
 
 for i in range(10):
-    print(data.get_datum(i))
-    
+    predictor.train(dataset)
+    mse = predictor.evaluate(dataset)
+    print(mse)
