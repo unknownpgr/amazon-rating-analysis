@@ -12,7 +12,7 @@ class SVDRatingPredictor(RatingPredictor):
         self.latent_dim = latent_dim
         self.dataset = None
 
-        self.gamma = 0.05  # 학습률
+        self.gamma = 0.01  # 학습률
         self.lambda_ = 0.02
 
         with task("Model initialization"):
