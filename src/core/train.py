@@ -23,3 +23,7 @@ class RatingPredictor(ABC):
     @abstractmethod
     def save(self, path: str):
         pass
+
+    @abstractmethod
+    def explain():
+        pass
